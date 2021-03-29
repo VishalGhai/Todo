@@ -10,8 +10,7 @@ const Item = (props) => {
     }
 
     const handleCheckItem = () => {
-        item.isCompleted=!item.isCompleted;
-        props.checkItem(item);
+        props.checkItem(item._id,{title:item.title,isCompleted:!item.isCompleted});
         // isCompleted(!completed);
     }
     

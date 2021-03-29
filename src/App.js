@@ -2,27 +2,32 @@ import React, { useEffect, useState } from 'react';
 import './css/style.css';
 import Input from './Input';
 import List from './List';
+import axios from 'axios';
 const App = () => {
 
     
     const [itemList,setItemList] = useState([]);
 
     useEffect(()=>{
-        console.log(itemList);
+        async function fetch(){
+            const {data} = await axios.get('http://localhost:3030/todo/');
+            setItemList(data);
+        }
+        fetch();
     });
 
-    const addItem = (item) => {
-        setItemList([...itemList,{id:item,title:item,isCompleted:false}]);
+    const addItem = async (item) => {
+        const {data} = await axios.post('http://localhost:3030/todo/',{title:item,isCompleted:false})
+        setItemList([...itemList,data]);
     }
 
-    const deleteItem = (item) => {
-        setItemList(itemList.filter(i => i.id !== item.id));
+    const deleteItem = async (item) => {
+        await axios.delete('http://localhost:3030/todo/'+item._id)
+        setItemList(itemList.filter(i => i._id !== item._id));
     }
 
-    const checkItem = (item) => {
-        itemList[itemList.indexOf(item)]=item;
-        setItemList([...itemList]);
-        // console.log('list is ',list)
+    const checkItem = async (id,item) => {
+        await axios.put(`http://localhost:3030/todo/${id}`,item);
     }
 
     return (
